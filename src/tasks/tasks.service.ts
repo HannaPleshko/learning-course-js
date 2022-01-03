@@ -1,7 +1,6 @@
-import { findLogin } from '../auth/repository';
 import { ExceptionType } from '../exception/exception';
 import { ErrorHandler } from '../helpers/error';
-import { createNewTask, getAllTasksDB, getTaskById, updateTaskById, deleteTaskById } from './repository';
+import { createNewTask, getAllTasksDB, getTaskById, updateTaskById, deleteTaskById } from './tasks.repository';
 
 const getAllTasks = async (user_id: number): Promise<iTask[]> => {
   const allTasks = await getAllTasksDB(user_id).catch((err) => {

@@ -9,8 +9,11 @@ interface iError {
 }
 interface iAuth {
   readonly id?: number;
-  readonly login: string;
+  readonly email: string;
+  readonly name: string;
   readonly password: string;
+  readonly role: number;
+  readonly status: number;
 }
 interface iTokenData {
   readonly token: string;

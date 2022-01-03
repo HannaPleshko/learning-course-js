@@ -3,8 +3,8 @@ import express, { Request, Response, NextFunction } from 'express';
 import { router as auth } from './auth/auth.controller';
 import { ExceptionType } from './exception/exception';
 import { handleError, ErrorHandler } from './helpers/error';
-import { router as tasks } from './tasks/tasks.controller';
 import { verifyToken } from './helpers/validation';
+import { router as tasks } from './tasks/tasks.controller';
 
 const app = express();
 
@@ -19,7 +19,7 @@ app.get('/error', (req: Request, res: Response) => {
 });
 
 app.use('/tasks', verifyToken, tasks);
-app.use('/auth', auth);
+app.use('/api', auth);
 app.use((err, req: Request, res: Response, next: NextFunction) => handleError(err, res));
 
 export { app };

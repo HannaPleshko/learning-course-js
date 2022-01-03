@@ -1,22 +1,20 @@
-import bcrypt, { hash } from 'bcrypt';
-import express, { Request } from 'express';
+import bcrypt from 'bcrypt';
 import { ExceptionType } from '../exception/exception';
 import { ErrorHandler } from '../helpers/error';
 import { createToken } from '../helpers/jwt';
-import { createNewUser, findLogin, hardDelUser, delUser } from './repository';
+import { createUser, getUser, hardDelUser, delUser } from './auth.repository';
 
 const saltround = 10;
 
-const createUser = async (email: string, name: string, status: number, role: number, password: string): Promise<iAuth> => {
-  const user = await findLogin(email).catch((err) => {
+export const regUser = async (email: string, name: string, pwd: string): Promise<iAuth> => {
+  const user = await getUser(email, name).catch((err) => {
     throw err;
   });
 
-  if (user) throw new ErrorHandler(500, ExceptionType.USER_ALREADY_EXISTS);
+  if (user) throw new ErrorHandler(500, ExceptionType.USER_EXISTS);
 
-  const hashedPassword = await bcrypt.hash(password, saltround);
-
-  const newUser = await createNewUser(email, name, status, role, hashedPassword).catch((err) => {
+  const hashPwd = await bcrypt.hash(pwd, saltround);
+  const newUser = await createUser(email, name, hashPwd).catch((err) => {
     throw err;
   });
 
@@ -24,27 +22,29 @@ const createUser = async (email: string, name: string, status: number, role: num
   return newUser;
 };
 
-const findUser = async (login: string, password: string): Promise<iTokenData> => {
-  const user = await findLogin(login).catch((err) => {
+export const authUser = async (email: string, name: string, pwd: string): Promise<iTokenData> => {
+  const user = await getUser(email, name).catch((err) => {
     throw err;
   });
 
   if (!user) throw new ErrorHandler(404, ExceptionType.NOT_FOUND);
-
-  const hashedPassword = user.password;
-
-  if (!(await bcrypt.compare(password, hashedPassword))) throw new ErrorHandler(500, ExceptionType.INPUT_ERROR_PASSWORD);
-  return createToken(user);
+  if (user.role === 1 || user.role === 2) { //1-active 2-admin 3-inactive
+    const hashPwd = user.password;
+    if (!(await bcrypt.compare(pwd, hashPwd))) throw new ErrorHandler(500, ExceptionType.WRONG_PASSWORD);
+    return createToken(user);
+  } else throw new ErrorHandler(500, ExceptionType.USER_INACTIVE);
 };
 
-const deleteUser = async (login: string): Promise<iAuth> => {
+export const deleteUser = async (email: string): Promise<iAuth> => { // delete by mail
   let user;
+  // DEV - UNITTEST
+  // PROD - Changes the user's status. 0 - active, 1 - remote
   if (process.env.NODE_ENV === 'DEV') {
-    user = await hardDelUser(login).catch((err) => {
+    user = await hardDelUser(email).catch((err) => {
       throw err;
     });
   } else {
-    user = await delUser(login).catch((err) => {
+    user = await delUser(email).catch((err) => {
       throw err;
     });
   }
@@ -53,4 +53,3 @@ const deleteUser = async (login: string): Promise<iAuth> => {
   return user;
 };
 
-export { createUser, findUser, deleteUser };

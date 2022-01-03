@@ -1,16 +1,15 @@
 export const enum ExceptionType {
-  SERVER_ERROR = 'Server Error!',
-  CHECK_FOR_EMPTY = 'Title or Description are missing',
-  EMPTY_LOGIN = 'Title are missing',
-  NOT_FOUND = 'Not Found!',
-  ERROR_CONNECTION = 'Getting error during the connection',
-  USER_ALREADY_EXISTS = 'This user already exists',
-  INPUT_ERROR_PASSWORD = 'Failure! Input Error! Try again!',
-  INPUT_ERROR_LOGIN = 'Failure! There is no user with this login! Try again!',
-  TOKEN_EXCEPTION = 'Wrong Authentication Token!',
-  TOKEN_MISSING = 'Authentication Token is Missing!',
+  SERVER_ERROR = 'Server error',
+  NOT_FOUND = 'Not found',
+  EMPTY_EMAIL = 'Email is missing',
+  EMPTY_NAME = 'Name is missing',
+  EMPTY_PWD = 'Password is missing',
+  EMPTY_TOKEN = 'Authentication Token is missing',
+  WRONG_EMAIL = 'Wrong email',
+  WRONG_PASSWORD = 'Wrong password',
+  USER_EXISTS = 'This user already exists',
+  USER_INACTIVE = 'This user is inactive',
 }
 export const enum SuccessType {
-  SUCCESS = 'Success!',
-  LOGOUT_SUCCESS = 'You have been logged out successfully!',
+  SUCCESS = 'Success',
 }
