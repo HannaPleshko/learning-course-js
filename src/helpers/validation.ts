@@ -11,7 +11,7 @@ export const validData = (req: Request, res: Response, next: NextFunction) => {
 
 export const validDataAuth = (req: Request, res: Response, next: NextFunction) => {
   try {
-    const { email, name, password } =(() => ({ email: req.body.email.trim(), name: req.body.name.trim(), password: req.body.password.trim() }))();
+    const { email, name, password } = (() => ({ email: req.body.email.trim().toLowerCase(), name: req.body.name.trim(), password: req.body.password.trim() }))();
     if (email && name && password) {
       if (!/^([a-z0-9_-]+\.)*[a-z0-9_-]+@[a-z0-9_-]+(\.[a-z0-9_-]+)*\.[a-z]{2,6}$/.test(email))
         throw new ErrorHandler(500, ExceptionType.WRONG_EMAIL);
@@ -21,6 +21,20 @@ export const validDataAuth = (req: Request, res: Response, next: NextFunction) =
       if (!name) throw new ErrorHandler(500, ExceptionType.EMPTY_NAME);
       if (!password) throw new ErrorHandler(500, ExceptionType.EMPTY_PWD);
     }
+  } catch (err) {
+    if (err instanceof ErrorHandler) handleError(err, res);
+    else buildResponse(res, 500, ExceptionType.SERVER_ERROR);
+  }
+};
+// TODO: validEmailAuth + validDataAuth 
+export const validEmailAuth = (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const { email } = (() => ({ email: req.body.email.trim().toLowerCase() }))();
+    if (email) {
+      if (!/^([a-z0-9_-]+\.)*[a-z0-9_-]+@[a-z0-9_-]+(\.[a-z0-9_-]+)*\.[a-z]{2,6}$/.test(email))
+        throw new ErrorHandler(500, ExceptionType.WRONG_EMAIL);
+      next();
+    } else throw new ErrorHandler(500, ExceptionType.EMPTY_EMAIL);
   } catch (err) {
     if (err instanceof ErrorHandler) handleError(err, res);
     else buildResponse(res, 500, ExceptionType.SERVER_ERROR);

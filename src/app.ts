@@ -1,6 +1,6 @@
 import cookieParser from 'cookie-parser';
 import express, { Request, Response, NextFunction } from 'express';
-import { router as auth } from './auth/auth.controller';
+import { router as auth } from './api/api.controller';
 import { ExceptionType } from './exception/exception';
 import { handleError, ErrorHandler } from './helpers/error';
 import { verifyToken } from './helpers/validation';

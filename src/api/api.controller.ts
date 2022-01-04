@@ -3,16 +3,16 @@ import { ExceptionType, SuccessType } from '../exception/exception';
 import { ErrorHandler, handleError } from '../helpers/error';
 import { createCookie } from '../helpers/jwt';
 import { buildResponse } from '../helpers/response';
-import { validDataAuth } from '../helpers/validation';
-import { regUser, authUser, deleteUser } from './auth.service';
+import { validDataAuth, validEmailAuth } from '../helpers/validation';
+import { regUser, authUser, deleteUser } from './api.service';
 
 const router = express.Router();
 
-// request contains email, name, password, status, role
+// request contains email, name, password
 // response body contains type SUCCESS
 router.post('/register', validDataAuth, async (req: Request, res: Response) => {
   try {
-    const { email, name, password } = (() => ({ email: req.body.email.trim(), name: req.body.name.trim(), password: req.body.password.trim() }))();
+    const { email, name, password } = (() => ({ email: req.body.email.trim().toLowerCase(), name: req.body.name.trim(), password: req.body.password.trim() }))();
 
     const user = await regUser(email, name, password);
 
@@ -23,11 +23,11 @@ router.post('/register', validDataAuth, async (req: Request, res: Response) => {
   }
 });
 
-// request contains email, password, name
+// request contains email, name, password
 // response body contains type SUCCESS, header contains authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOjUsImlhdCI6MTY0MTIzNzExNH0.k77ftUNxoh0ghzznpr_4BQJVLZMmEfD0CfTBmKKAanY
 router.post('/auth', validDataAuth, async (req: Request, res: Response) => {
   try {
-    const { email, name, password } = (() => ({ email: req.body.email.trim(), name: req.body.name.trim(), password: req.body.password.trim() }))();
+    const { email, name, password } = (() => ({ email: req.body.email.trim().toLowerCase(), name: req.body.name.trim(), password: req.body.password.trim() }))();
 
     const tokenData = await authUser(email, name, password);
 
@@ -39,7 +39,7 @@ router.post('/auth', validDataAuth, async (req: Request, res: Response) => {
   }
 });
 
-// request -
+// request - header contains authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOjUsImlhdCI6MTY0MTIzNzExNH0.k77ftUNxoh0ghzznpr_4BQJVLZMmEfD0CfTBmKKAanY
 // response body contains type SUCCESS, header contains authorization: Bearer
 router.post('/logout', async (req: Request, res: Response) => {
   try {
@@ -55,10 +55,11 @@ router.post('/logout', async (req: Request, res: Response) => {
   }
 });
 
-router.delete('/delUser', async (req: Request, res: Response) => {
+router.delete('/delUser', validEmailAuth, async (req: Request, res: Response) => {
   try {
-    await deleteUser(req.body.login);
+    const { email } = (() => ({ email: req.body.email.trim().toLowerCase() }))();
 
+    await deleteUser(email);
     buildResponse(res, 200, SuccessType.SUCCESS);
   } catch (err) {
     if (err instanceof ErrorHandler) handleError(err, res);

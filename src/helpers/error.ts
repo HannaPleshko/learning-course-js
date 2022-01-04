@@ -1,4 +1,5 @@
 import { Response } from 'express';
+import { logger } from '../config/logger'
 
 class ErrorHandler extends Error {
   readonly statusCode: number;
@@ -13,6 +14,7 @@ class ErrorHandler extends Error {
 const handleError = (err: iError, res: Response) => {
   const { statusCode, message } = err;
 
+  logger.info(`${statusCode}, ${message}`)
   res.status(statusCode);
   res.json({
     status: 'error',
