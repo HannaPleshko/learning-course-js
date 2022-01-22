@@ -3,7 +3,7 @@ import { ExceptionType, SuccessType } from '../exception/exception';
 import { ErrorHandler, handleError } from '../helpers/error';
 import { createCookie } from '../helpers/jwt';
 import { buildResponse } from '../helpers/response';
-import { validDataAuth, validEmailAuth } from '../helpers/validation';
+import { validDataAuth, validEmailAuth, validData } from '../helpers/validation';
 import { regUser, authUser, deleteUser } from './api.service';
 
 const router = express.Router();
@@ -12,9 +12,16 @@ const router = express.Router();
 // response body contains type SUCCESS
 router.post('/register', validDataAuth, async (req: Request, res: Response) => {
   try {
-    const { email, name, password } = (() => ({ email: req.body.email.trim().toLowerCase(), name: req.body.name.trim(), password: req.body.password.trim() }))();
+    const { email, name, surname, role, password } = (() => (
+      {
+        email: req.body.email.trim().toLowerCase(), 
+        name: req.body.name.trim().toLowerCase(),
+        surname: req.body.name.trim().toLowerCase(), 
+        role: req.body.role, 
+        password: req.body.password.trim()
+      }))();
 
-    const user = await regUser(email, name, password);
+    const user = await regUser(email, name, surname, role, password);
 
     buildResponse(res, 200, SuccessType.SUCCESS); // TODO: ДОБАВИТЬ ВОЗМОЖНО АВТОРИЗАЦИЮ И ОТПРАВКУ ТОКЕНА
   } catch (err) {
@@ -25,11 +32,15 @@ router.post('/register', validDataAuth, async (req: Request, res: Response) => {
 
 // request contains email, name, password
 // response body contains type SUCCESS, header contains authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOjUsImlhdCI6MTY0MTIzNzExNH0.k77ftUNxoh0ghzznpr_4BQJVLZMmEfD0CfTBmKKAanY
-router.post('/auth', validDataAuth, async (req: Request, res: Response) => {
+router.post('/auth', validData, async (req: Request, res: Response) => {
   try {
-    const { email, name, password } = (() => ({ email: req.body.email.trim().toLowerCase(), name: req.body.name.trim(), password: req.body.password.trim() }))();
+    const { email, password } = (() => (
+      {
+        email: req.body.email.trim().toLowerCase(), 
+        password: req.body.password.trim()
+      }))();
 
-    const tokenData = await authUser(email, name, password);
+    const tokenData = await authUser(email, password);
 
     res.setHeader('authorization', [createCookie(tokenData)]);
     buildResponse(res, 200, SuccessType.SUCCESS);

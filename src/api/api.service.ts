@@ -6,15 +6,15 @@ import { createUser, getUser, hardDelUser, delUser } from './api.repository';
 
 const saltround = 10;
 
-export const regUser = async (email: string, name: string, pwd: string): Promise<iAuth> => {
-  const user = await getUser(email, name).catch((err) => {
+export const regUser = async (email: string, name: string, surname: string, role: number, pwd: string): Promise<iAuth> => {
+  const user = await getUser(email).catch((err) => {
     throw err;
   });
 
   if (user) throw new ErrorHandler(500, ExceptionType.USER_EXISTS);
 
   const hashPwd = await bcrypt.hash(pwd, saltround);
-  const newUser = await createUser(email, name, hashPwd).catch((err) => {
+  const newUser = await createUser(email, name, surname, hashPwd, role).catch((err) => {
     throw err;
   });
 
@@ -22,13 +22,13 @@ export const regUser = async (email: string, name: string, pwd: string): Promise
   return newUser;
 };
 
-export const authUser = async (email: string, name: string, pwd: string): Promise<iTokenData> => {
-  const user = await getUser(email, name).catch((err) => {
+export const authUser = async (email: string, pwd: string): Promise<iTokenData> => {
+  const user = await getUser(email).catch((err) => {
     throw err;
   });
 
   if (!user) throw new ErrorHandler(404, ExceptionType.NOT_FOUND);
-  if (user.role === 1 || user.role === 2) { //1-active 2-admin 3-inactive
+  if (user.role === 1 || user.role === 2) {
     const hashPwd = user.password;
     if (!(await bcrypt.compare(pwd, hashPwd))) throw new ErrorHandler(500, ExceptionType.WRONG_PASSWORD);
     return createToken(user);

@@ -3,6 +3,7 @@ export const enum ExceptionType {
   NOT_FOUND = 'Not found',
   EMPTY_EMAIL = 'Email is missing',
   EMPTY_NAME = 'Name is missing',
+  EMPTY_SURNAME = 'Surname is missing',
   EMPTY_PWD = 'Password is missing',
   EMPTY_TOKEN = 'Authentication Token is missing',
   WRONG_EMAIL = 'Wrong email',

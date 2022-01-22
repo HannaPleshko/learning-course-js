@@ -1,27 +1,30 @@
 import { pool } from '../database';
 
-export const getUser = async (email: string, name: string): Promise<iAuth | null> => {
+export const getUser = async (email: string): Promise<iAuth | null> => {
   try {
-    const sql = 'SELECT * FROM users WHERE email = $1 AND name = $2';
-    const arrOfVal = (await pool.query(sql, [email, name])).rows[0];
+    const sql = 'SELECT * FROM users WHERE email = $1';
+    const arrOfVal = (await pool.query(sql, [email])).rows[0];
     return arrOfVal;
   } catch (err) {
-    console.log(`Exception in findEmail: ${err}`);
+    console.log(`Exception in getUser: ${err}`);
     return null;
   }
 };
 
-export const createUser = async (email: string, name: string,  password: string,  role: number = 0, status: number = 0): Promise<iAuth | null> => {
+//role = 1-student 2-teacher 0-admin status = 0 - active, 1 - inactive
+export const createUser = async (email: string, name: string, surname: string, password: string, role: number, status: number = 0): Promise<iAuth | null> => {
   const client = await pool.connect();
   try {
     await client.query('BEGIN');
-    const sql = 'INSERT INTO users (email, name, password, role, status) VALUES($1, $2, $3, $4, $5) RETURNING users.*';
-    const arrOfVal = (await client.query(sql, [email, name, password, role, status])).rows;
+    console.log(role);
+    
+    const sql = 'INSERT INTO users (email, name, surname, password, role, status) VALUES($1, $2, $3, $4, $5, $6) RETURNING users.*';
+    const arrOfVal = (await client.query(sql, [email, name, surname, password, role, status])).rows;
     await client.query('COMMIT');
     if (arrOfVal.length > 0) return arrOfVal;
     return null;
   } catch (err) {
-    console.log(`Exception in createNewUser: ${err}`);
+    console.log(`Exception in createUser: ${err}`);
     await client.query('ROLLBACK');
     return null;
   } finally {
@@ -48,7 +51,7 @@ export const restoreUser = async (email: string, status: number = 0): Promise<iA
   }
 };
 
-export const delUser = async (email: string,  status: number = 1): Promise<iAuth | null> => {
+export const delUser = async (email: string, status: number = 1): Promise<iAuth | null> => {
   const client = await pool.connect();
   try {
     await client.query('BEGIN');
