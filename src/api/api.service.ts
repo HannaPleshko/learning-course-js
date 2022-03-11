@@ -2,7 +2,7 @@ import bcrypt from 'bcrypt';
 import { ExceptionType } from '../exception/exception';
 import { ErrorHandler } from '../helpers/error';
 import { createToken } from '../helpers/jwt';
-import { createUser, getUser, hardDelUser, delUser } from './api.repository';
+import { createUser, getUser, delUser } from './api.repository';
 
 const saltround = 10;
 
@@ -35,21 +35,11 @@ export const authUser = async (email: string, pwd: string): Promise<iTokenData> 
   } else throw new ErrorHandler(500, ExceptionType.USER_INACTIVE);
 };
 
-export const deleteUser = async (email: string): Promise<iAuth> => { // delete by mail
-  let user;
-  // DEV - UNITTEST
-  // PROD - Changes the user's status. 0 - active, 1 - remote
-  if (process.env.NODE_ENV === 'DEV') {
-    user = await hardDelUser(email).catch((err) => {
-      throw err;
-    });
-  } else {
-    user = await delUser(email).catch((err) => {
-      throw err;
-    });
-  }
-
+export const deleteUser = async (email: string): Promise<iAuth> => {
+  // Changes the user's status. 0 - active, 1 - del
+  let user = await delUser(email).catch((err) => {
+    throw err;
+  });
   if (!user) throw new ErrorHandler(404, ExceptionType.NOT_FOUND);
   return user;
 };
-

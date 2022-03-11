@@ -23,7 +23,7 @@ router.post('/register', validDataAuth, async (req: Request, res: Response) => {
 
     const user = await regUser(email, name, surname, role, password);
 
-    buildResponse(res, 200, SuccessType.SUCCESS); // TODO: ДОБАВИТЬ ВОЗМОЖНО АВТОРИЗАЦИЮ И ОТПРАВКУ ТОКЕНА
+    buildResponse(res, 200, SuccessType.SUCCESS); // TODO: ДОБАВИТЬ ВОЗМОЖНО ОТПРАВКУ ТОКЕНА
   } catch (err) {
     if (err instanceof ErrorHandler) handleError(err, res);
     else buildResponse(res, 500, ExceptionType.SERVER_ERROR);
@@ -43,7 +43,7 @@ router.post('/auth', validData, async (req: Request, res: Response) => {
     const tokenData = await authUser(email, password);
 
     res.setHeader('authorization', [createCookie(tokenData)]);
-    buildResponse(res, 200, SuccessType.SUCCESS);
+    buildResponse(res, 200, tokenData);
   } catch (err) {
     if (err instanceof ErrorHandler) handleError(err, res);
     else buildResponse(res, 500, ExceptionType.SERVER_ERROR);
