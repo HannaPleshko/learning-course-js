@@ -4,7 +4,7 @@ import { ErrorHandler, handleError } from '../helpers/error';
 import { createCookie } from '../helpers/jwt';
 import { buildResponse } from '../helpers/response';
 import { validDataAuth, validEmailAuth, validData } from '../helpers/validation';
-import { regUser, authUser, deleteUser } from './api.service';
+import { regUser, authUser, deleteUser } from '../service/api.service';
 
 const router = express.Router();
 
