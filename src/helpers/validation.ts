@@ -11,7 +11,12 @@ export const validData = (req: Request, res: Response, next: NextFunction) => {
 
 export const validDataAuth = (req: Request, res: Response, next: NextFunction) => {
   try {
-    const { email, name, surname, password } = (() => ({ email: req.body.email.trim().toLowerCase(), name: req.body.name.trim(), surname: req.body.name.trim().toLowerCase(), password: req.body.password.trim() }))();
+    const { email, name, surname, password } = (() => ({
+      email: req.body.email.trim().toLowerCase(),
+      name: req.body.name.trim(),
+      surname: req.body.name.trim().toLowerCase(),
+      password: req.body.password.trim(),
+    }))();
     if (email && name && surname && password) {
       if (!/^([a-z0-9_-]+\.)*[a-z0-9_-]+@[a-z0-9_-]+(\.[a-z0-9_-]+)*\.[a-z]{2,6}$/.test(email))
         throw new ErrorHandler(500, ExceptionType.WRONG_EMAIL);
@@ -27,7 +32,7 @@ export const validDataAuth = (req: Request, res: Response, next: NextFunction) =
     else buildResponse(res, 500, ExceptionType.SERVER_ERROR);
   }
 };
-// TODO: validEmailAuth + validDataAuth 
+// TODO: validEmailAuth + validDataAuth
 export const validEmailAuth = (req: Request, res: Response, next: NextFunction) => {
   try {
     const { email } = (() => ({ email: req.body.email.trim().toLowerCase() }))();
@@ -46,4 +51,3 @@ export const verifyToken = (req: Request, res: Response, next: NextFunction) => 
   if (req.headers.authorization && req.headers.authorization.split(' ')[0] === 'Bearer' && req.headers.authorization.split(' ')[1]) next();
   else throw new ErrorHandler(500, ExceptionType.EMPTY_TOKEN);
 };
-

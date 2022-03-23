@@ -1,6 +1,11 @@
 import { Response } from 'express';
+import { ExceptionType, SuccessType } from '../exception/exception';
 
-const buildResponse = (res: Response, st: number, mess: iTask[] | iTask | string | iAuth | iTokenData) => {
+const buildResponse = (
+  res: Response,
+  st: number,
+  mess: iAuth | iCourse | iCourse[] | iTopic | iTopic[] | iLesson | iLesson[] | iTokenData | string
+) => {
   res.status(st);
   res.json(mess);
 };

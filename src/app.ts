@@ -1,10 +1,11 @@
 import cookieParser from 'cookie-parser';
 import express, { Request, Response, NextFunction } from 'express';
-import { router as auth } from './controller/api.controller';
+import { router as auth } from './controller/auth.controller';
 import { ExceptionType } from './exception/exception';
 import { handleError, ErrorHandler } from './helpers/error';
-import { verifyToken } from './helpers/validation';
-import { router as tasks } from './tasks/tasks.controller';
+import { router as course } from './controller/course.controller';
+import { router as topic } from './controller/topic.controller';
+import { router as lesson } from './controller/lesson.controller';
 
 const app = express();
 
@@ -18,8 +19,10 @@ app.get('/error', (req: Request, res: Response) => {
   throw new ErrorHandler(500, ExceptionType.SERVER_ERROR);
 });
 
-app.use('/tasks', verifyToken, tasks);
 app.use('/api', auth);
+app.use('/course', course);
+app.use('/topic', topic);
+app.use('/lesson', lesson);
 app.use((err, req: Request, res: Response, next: NextFunction) => handleError(err, res));
 
 export { app };

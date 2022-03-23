@@ -2,7 +2,7 @@ import bcrypt from 'bcrypt';
 import { ExceptionType } from '../exception/exception';
 import { ErrorHandler } from '../helpers/error';
 import { createToken } from '../helpers/jwt';
-import { createUser, getUser, delUser } from '../repository/api.repository';
+import { createUser, getUser, delUser } from '../repository/auth.repository';
 
 const saltround = 10;
 
