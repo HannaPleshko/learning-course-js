@@ -12,12 +12,19 @@ export const getUser = async (email: string): Promise<iAuth | null> => {
 };
 
 //role = 1-student 2-teacher 0-admin status = 0 - active, 1 - inactive
-export const createUser = async (email: string, name: string, surname: string, password: string, role: number, status: number = 0): Promise<iAuth | null> => {
+export const createUser = async (
+  email: string,
+  name: string,
+  surname: string,
+  password: string,
+  role: number,
+  status: number = 0
+): Promise<iAuth | null> => {
   const client = await pool.connect();
   try {
     await client.query('BEGIN');
     console.log(role);
-    
+
     const sql = 'INSERT INTO users (email, name, surname, password, role, status) VALUES($1, $2, $3, $4, $5, $6) RETURNING users.*';
     const arrOfVal = (await client.query(sql, [email, name, surname, password, role, status])).rows;
     await client.query('COMMIT');
