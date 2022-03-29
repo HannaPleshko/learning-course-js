@@ -6,9 +6,9 @@ import { getLessons, getLesson, updateLesson, deleteLesson, createLesson } from 
 
 const router = express.Router();
 
-router.post('/all-les', async (req: Request, res: Response) => {
+router.get('/all-les/:topic_id/:course_id', async (req: Request, res: Response) => {
   try {
-    const { topic_id, course_id } = req.body;
+    const {topic_id, course_id} = req.params;
     
     const lesson = await getLessons(topic_id, course_id);
 

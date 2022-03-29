@@ -8,7 +8,7 @@ export const getLessonsDB = async (topic_id: number, course_id: number): Promise
     join topic on topic.id = lesson.topic_id
     join course on topic.course_id = course.id
     where lesson.topic_id = $1 and topic.course_id = $2`;
-    const arrOfVal = (await pool.query(sql, [topic_id, course_id])).rows[0];
+    const arrOfVal = (await pool.query(sql, [topic_id, course_id])).rows;
     if (arrOfVal.length > 0) return arrOfVal;
     return null;
   } catch (err) {
