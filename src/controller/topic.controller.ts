@@ -17,10 +17,10 @@ router.get('/', async (req: Request, res: Response) => {
   }
 });
 
-router.get('/:id', async (req: Request, res: Response) => {
+router.get('/:course_id', async (req: Request, res: Response) => {
   try {
-    const { id } = req.params;
-    const topic = await getTopic(id);
+    const { course_id } = req.params;
+    const topic = await getTopic(course_id);
 
     buildResponse(res, 200, topic);
   } catch (err) {

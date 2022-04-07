@@ -12,12 +12,10 @@ export const getTopicsDB = async (): Promise<iTopic[] | null> => {
   }
 };
 
-export const getTopicDB = async (id: number): Promise<iTopic | null> => {
+export const getTopicDB = async (course_id: number): Promise<iTopic | null> => {
   try {
-    console.log(id);
-    
-    const sql = 'SELECT * FROM topic WHERE id = $1';
-    const arrOfVal = (await pool.query(sql, [id])).rows;
+    const sql = 'SELECT * FROM topic WHERE course_id = $1';
+    const arrOfVal = (await pool.query(sql, [course_id])).rows;
     if (arrOfVal.length > 0) return arrOfVal;
     return null;
   } catch (err) {
