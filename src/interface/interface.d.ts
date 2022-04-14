@@ -14,6 +14,7 @@ interface iTopic {
   readonly id?: number;
   readonly course_id: number;
   readonly title: string;
+  readonly description?: string
 }
 interface iLesson {
   readonly id?: number;

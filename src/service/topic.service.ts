@@ -20,8 +20,8 @@ export const getTopic = async (course_id: number): Promise<iTopic> => {
   return topic;
 };
 
-export const createTopic = async (course_id: number, title: string): Promise<iTopic> => {
-  const topic = await createTopicDB(course_id, title).catch((err) => {
+export const createTopic = async (course_id: number, title: string, description: string): Promise<iTopic> => {
+  const topic = await createTopicDB(course_id, title, description).catch((err) => {
     throw err;
   });
 

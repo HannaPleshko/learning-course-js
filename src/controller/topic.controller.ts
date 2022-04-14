@@ -31,8 +31,8 @@ router.get('/:course_id', async (req: Request, res: Response) => {
 
 router.post('/', async (req: Request, res: Response) => {
   try {
-    const { course_id, title } = req.body;
-    const topic = await createTopic(course_id, title);
+    const { course_id, title, description } = req.body;
+    const topic = await createTopic(course_id, title, description);
 
     buildResponse(res, 200, topic);
   } catch (err) {

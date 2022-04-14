@@ -24,12 +24,12 @@ export const getTopicDB = async (course_id: number): Promise<iTopic | null> => {
   }
 };
 
-export const createTopicDB = async (course_id: number, title: string): Promise<iTopic | null> => {
+export const createTopicDB = async (course_id: number, title: string, description: string): Promise<iTopic | null> => {
   const client = await pool.connect();
   try {
     await client.query('BEGIN');
-    const sql = 'INSERT INTO topic (course_id, title) VALUES($1, $2) RETURNING topic.*';
-    const arrOfVal = (await client.query(sql, [course_id, title])).rows;
+    const sql = 'INSERT INTO topic (course_id, title, description) VALUES($1, $2, $3) RETURNING topic.*';
+    const arrOfVal = (await client.query(sql, [course_id, title, description])).rows;
     await client.query('COMMIT');
     if (arrOfVal.length > 0) return arrOfVal;
     return null;
