@@ -1,6 +1,6 @@
-<h1 align="center">yourlearning</h1>
-<p align="center">Server side of the educational platform with Node.js, Express.js. DBMS PostgreSQL</p>
-
+# yourlearning 
+Server side of the educational platform with Node.js, Express.js. DBMS PostgreSQL
+  
 ## .env  
 Create env file. Add dependencies:
 PORT = 5000
