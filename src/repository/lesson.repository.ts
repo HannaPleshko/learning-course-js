@@ -2,8 +2,7 @@ import { pool } from '../database';
 
 export const getLessonsDB = async (topic_id: number, course_id: number): Promise<iLesson[] | null> => {
   try {
-    const sql = 
-    `select lesson.id, lesson.topic_id, lesson.is_read, lesson.title, lesson.content
+    const sql = `select lesson.id, lesson.topic_id, lesson.is_read, lesson.title, lesson.content
     from lesson
     join topic on topic.id = lesson.topic_id
     join course on topic.course_id = course.id
@@ -45,15 +44,27 @@ export const createLessonDB = async (topic_id: number, is_read: boolean, title: 
     client.release();
   }
 };
-export const updateLessonDB = async (): Promise<iLesson | null> => {
+export const updateLessonDB = async (
+  id: number,
+  topic_id: number,
+  is_read: boolean,
+  title: string,
+  content: string
+): Promise<iLesson | null> => {
+  const client = await pool.connect();
   try {
-    // TODO
-    const sql = '';
-    const arrOfVal = (await pool.query(sql, [])).rows[0];
-    return arrOfVal;
+    await client.query('BEGIN');
+    const sql = 'UPDATE lesson SET topic_id = $1, title = $2, is_read = $3, content = $4, WHERE id = $5  RETURNING lesson.*';
+    const arrOfVal = (await client.query(sql, [topic_id, title, is_read, content, id])).rows;
+    await client.query('COMMIT');
+    if (arrOfVal.length > 0) return arrOfVal;
+    return null;
   } catch (err) {
     console.log(`Exception in updateLessonDB: ${err}`);
+    await client.query('ROLLBACK');
     return null;
+  } finally {
+    client.release();
   }
 };
 export const deleteLessonDB = async (id): Promise<iLesson | null> => {

@@ -1,10 +1,10 @@
 import express, { Request, Response } from 'express';
 import { ExceptionType, SuccessType } from '../exception/exception';
 import { ErrorHandler, handleError } from '../helpers/error';
-import { createCookie } from '../helpers/jwt';
+import { createToken } from '../helpers/jwt';
 import { buildResponse } from '../helpers/response';
 import { validDataAuth, validEmailAuth, validData } from '../helpers/validation';
-import { regUser, authUser, deleteUser } from '../service/auth.service';
+import { regUser, authUser, getUsers, deleteUser } from '../service/auth.service';
 
 const router = express.Router();
 
@@ -38,29 +38,24 @@ router.post('/auth', validData, async (req: Request, res: Response) => {
       password: req.body.password.trim(),
     }))();
 
-    const tokenData = await authUser(email, password);
+    const user = await authUser(email, password);
+    const token = createToken(user);
 
-    res.setHeader('authorization', [createCookie(tokenData)]);
-    buildResponse(res, 200, tokenData);
+    buildResponse(res, 200, token);
   } catch (err) {
     if (err instanceof ErrorHandler) handleError(err, res);
     else buildResponse(res, 500, ExceptionType.SERVER_ERROR);
   }
 });
 
-// request - header contains authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOjUsImlhdCI6MTY0MTIzNzExNH0.k77ftUNxoh0ghzznpr_4BQJVLZMmEfD0CfTBmKKAanY
-// response body contains type SUCCESS, header contains authorization: Bearer
-router.post('/logout', async (req: Request, res: Response) => {
+router.get('/users', async (req: Request, res: Response) => {
   try {
-    res.setHeader('authorization', [
-      createCookie({
-        token: ' ',
-      }),
-    ]);
+    const users = await getUsers();
 
-    buildResponse(res, 200, SuccessType.SUCCESS);
-  } catch (error) {
-    buildResponse(res, 500, ExceptionType.SERVER_ERROR);
+    buildResponse(res, 200, users);
+  } catch (err) {
+    if (err instanceof ErrorHandler) handleError(err, res);
+    else buildResponse(res, 500, ExceptionType.SERVER_ERROR);
   }
 });
 
@@ -73,6 +68,21 @@ router.delete('/delUser', validEmailAuth, async (req: Request, res: Response) =>
   } catch (err) {
     if (err instanceof ErrorHandler) handleError(err, res);
     else buildResponse(res, 500, ExceptionType.SERVER_ERROR);
+  }
+});
+
+router.get('/logout', async (req: Request, res: Response) => {
+  try {
+    // res.setHeader('authorization', [
+    //   createCookie({
+    //     token: ' ',
+    //   }),
+    // ]);
+    const token = '';
+
+    buildResponse(res, 200, token);
+  } catch (error) {
+    buildResponse(res, 500, ExceptionType.SERVER_ERROR);
   }
 });
 

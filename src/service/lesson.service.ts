@@ -29,8 +29,8 @@ export const createLesson = async (topic_id: number, is_read: boolean, title: st
   return lesson;
 };
 
-export const updateLesson = async (): Promise<iLesson> => {
-  const lesson = await updateLessonDB().catch((err) => {
+export const updateLesson = async (id: number, topic_id: number, is_read: boolean, title: string, content: string): Promise<iLesson> => {
+  const lesson = await updateLessonDB(id, topic_id, is_read, title, content).catch((err) => {
     throw err;
   });
 

@@ -14,7 +14,7 @@ interface iTopic {
   readonly id?: number;
   readonly course_id: number;
   readonly title: string;
-  readonly description?: string
+  readonly description?: string;
 }
 interface iLesson {
   readonly id?: number;
@@ -31,7 +31,11 @@ interface iTokenData {
   readonly token: string;
 }
 interface iDataStoredInToken {
-  readonly _id: number;
+  readonly id: number;
+  readonly email: string;
+  readonly name: string;
+  readonly role: number;
+  readonly status: number;
   readonly iat?: number;
   readonly exp?: number;
 }

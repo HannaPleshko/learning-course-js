@@ -41,10 +41,11 @@ router.post('/', async (req: Request, res: Response) => {
   }
 });
 
-router.put('/:id', async (req: Request, res: Response) => {
+router.post('/:id', async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
     const { title } = req.body;
+
     const course = await updateCourse(id, title);
 
     buildResponse(res, 200, course);
@@ -54,9 +55,10 @@ router.put('/:id', async (req: Request, res: Response) => {
   }
 });
 
-router.delete('/:id', async (req: Request, res: Response) => {
+router.post('/del/:id', async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
+
     const course = await deleteCourse(id);
 
     buildResponse(res, 200, course);

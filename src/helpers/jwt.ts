@@ -4,7 +4,11 @@ import jwt_decode from 'jwt-decode';
 const createToken = (user: iAuth): iTokenData => {
   const secret = process.env.JWT_SECRET;
   const dataStoredInToken: iDataStoredInToken = {
-    _id: user.id,
+    id: user.id,
+    email: user.email,
+    name: user.name,
+    role: user.role,
+    status: user.status,
   };
 
   return {

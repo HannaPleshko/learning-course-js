@@ -32,6 +32,7 @@ router.get('/:course_id', async (req: Request, res: Response) => {
 router.post('/', async (req: Request, res: Response) => {
   try {
     const { course_id, title, description } = req.body;
+
     const topic = await createTopic(course_id, title, description);
 
     buildResponse(res, 200, topic);
@@ -41,11 +42,11 @@ router.post('/', async (req: Request, res: Response) => {
   }
 });
 
-router.put('/:id', async (req: Request, res: Response) => {
+router.post('/:id', async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
-    const { title } = req.body;
-    const course = await updateTopic(id, title);
+    const { title, description } = req.body;
+    const course = await updateTopic(id, title, description);
 
     buildResponse(res, 200, course);
   } catch (err) {
@@ -54,7 +55,7 @@ router.put('/:id', async (req: Request, res: Response) => {
   }
 });
 
-router.delete('/:id', async (req: Request, res: Response) => {
+router.post('/del/:id', async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
     const course = await deleteTopic(id);

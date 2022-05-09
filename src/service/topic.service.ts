@@ -29,8 +29,8 @@ export const createTopic = async (course_id: number, title: string, description:
   return topic;
 };
 
-export const updateTopic = async (id: number, title: string): Promise<iTopic> => {
-  const topic = await updateTopicDB(id, title).catch((err) => {
+export const updateTopic = async (id: number, title: string, description: string): Promise<iTopic> => {
+  const topic = await updateTopicDB(id, title, description).catch((err) => {
     throw err;
   });
 

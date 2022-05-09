@@ -42,12 +42,12 @@ export const createTopicDB = async (course_id: number, title: string, descriptio
   }
 };
 
-export const updateTopicDB = async (id: number, title: string): Promise<iTopic | null> => {
+export const updateTopicDB = async (id: number, title: string, description: string): Promise<iTopic | null> => {
   const client = await pool.connect();
   try {
     await client.query('BEGIN');
-    const sql = 'UPDATE topic SET title = $1 WHERE id = $2 RETURNING topic.*';
-    const arrOfVal = (await client.query(sql, [title, id])).rows;
+    const sql = 'UPDATE topic SET title = $1, description = $2 WHERE id = $3  RETURNING topic.*';
+    const arrOfVal = (await client.query(sql, [title, description, id])).rows;
     await client.query('COMMIT');
     if (arrOfVal.length > 0) return arrOfVal;
     return null;

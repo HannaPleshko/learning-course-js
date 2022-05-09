@@ -8,8 +8,8 @@ const router = express.Router();
 
 router.get('/:course_id/:topic_id', async (req: Request, res: Response) => {
   try {
-    const {topic_id, course_id} = req.params;
-    
+    const { topic_id, course_id } = req.params;
+
     const lesson = await getLessons(topic_id, course_id);
 
     buildResponse(res, 200, lesson);
@@ -43,9 +43,11 @@ router.post('/', async (req: Request, res: Response) => {
   }
 });
 
-router.put('/:id', async (req: Request, res: Response) => {
+router.post('/:id', async (req: Request, res: Response) => {
   try {
-    const lesson = await updateLesson();
+    const { id } = req.params;
+    const { topic_id, is_read, title, content } = req.body;
+    const lesson = await updateLesson(id, topic_id, is_read, title, content);
 
     buildResponse(res, 200, lesson);
   } catch (err) {
@@ -54,7 +56,7 @@ router.put('/:id', async (req: Request, res: Response) => {
   }
 });
 
-router.delete('/:id', async (req: Request, res: Response) => {
+router.post('/del/:id', async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
     const lesson = await deleteLesson(id);

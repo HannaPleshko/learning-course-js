@@ -11,6 +11,17 @@ export const getUser = async (email: string): Promise<iAuth | null> => {
   }
 };
 
+export const getUsersDB = async (): Promise<iAuth[] | null> => {
+  try {
+    const sql = 'SELECT * FROM users';
+    const arrOfVal = (await pool.query(sql)).rows;
+    return arrOfVal;
+  } catch (err) {
+    console.log(`Exception in getUsersDB: ${err}`);
+    return null;
+  }
+};
+
 //role = 1-student 2-teacher 0-admin status = 0 - active, 1 - inactive
 export const createUser = async (
   email: string,
@@ -23,8 +34,6 @@ export const createUser = async (
   const client = await pool.connect();
   try {
     await client.query('BEGIN');
-    console.log(role);
-
     const sql = 'INSERT INTO users (email, name, surname, password, role, status) VALUES($1, $2, $3, $4, $5, $6) RETURNING users.*';
     const arrOfVal = (await client.query(sql, [email, name, surname, password, role, status])).rows;
     await client.query('COMMIT');
