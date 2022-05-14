@@ -23,6 +23,12 @@ interface iLesson {
   readonly title: string;
   readonly content: string;
 }
+interface iTask {
+  readonly id?: number;
+  readonly user_id: number;
+  readonly lesson_id: number;
+  readonly code: string;
+}
 interface iError {
   readonly statusCode: number;
   readonly message: string;

@@ -29,7 +29,7 @@ export const createUser = async (
   surname: string,
   password: string,
   role: number,
-  status: number = 0
+  status = 0
 ): Promise<iAuth | null> => {
   const client = await pool.connect();
   try {
@@ -49,7 +49,7 @@ export const createUser = async (
 };
 
 //TODO: do user restore
-export const restoreUser = async (email: string, status: number = 0): Promise<iAuth | null> => {
+export const restoreUser = async (email: string, status = 0): Promise<iAuth | null> => {
   const client = await pool.connect();
   try {
     await client.query('BEGIN');
@@ -67,7 +67,7 @@ export const restoreUser = async (email: string, status: number = 0): Promise<iA
   }
 };
 
-export const delUser = async (email: string, status: number = 1): Promise<iAuth | null> => {
+export const delUser = async (email: string, status = 1): Promise<iAuth | null> => {
   const client = await pool.connect();
   try {
     await client.query('BEGIN');

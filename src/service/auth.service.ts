@@ -46,7 +46,7 @@ export const getUsers = async (): Promise<iAuth[]> => {
 
 export const deleteUser = async (email: string): Promise<iAuth> => {
   // Changes the user's status. 0 - active, 1 - del
-  let user = await delUser(email).catch((err) => {
+  const user = await delUser(email).catch((err) => {
     throw err;
   });
   if (!user) throw new ErrorHandler(404, ExceptionType.NOT_FOUND);
